@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>VENUSAUR</title>
+	<style type="text/css">
+		body{
+			margin:0;
+
+		}
+		canvas{
+			display: block;
+		}
+	</style>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	
+
+	<script src="three.js"></script>
+	<script type="module" src="GLTFLoader.js"></script>
+	<script type="module" src="OrbitControls.js"></script>
+	<script type="module">
+		//import * as THREE from "./three.js";
+		import { OrbitControls } from "./OrbitControls.js";
+		import {GLTFLoader} from "./GLTFLoader.js";
+		
+		var scene = new THREE.Scene();
+		var camera = new THREE.PerspectiveCamera(
+			75,
+			window.innerWidth / window.innerHeight,
+			0.01,
+			1000
+		);
+
+
+		var renderer = new THREE.WebGLRenderer();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		document.body.appendChild(renderer.domElement);
+
+		var pokemon;
+
+		var loader = new GLTFLoader();
+		loader.load("VEN.glb", function(gltf){
+			pokemon = gltf.scene;
+			var gengar = gltf.scene;
+			gengar.scale.set(4,4,4);
+			gengar.position.setY(-10);
+			scene.add(gengar);
+		},
+		// called while loading is progressing
+		function (xhr) {
+			console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+		},
+		// called when loading has errors
+		function (error) {
+		console.log('An error happened');
+		}
+		);
+
+		// LIGHTING
+		const pointLight = new THREE.PointLight(0xffffff, .5);
+		pointLight.position.set(20, 60, -10);
+
+		const hemlight = new THREE.PointLight(0xffffff, 1);
+		hemlight.position.set(-50, -60, -10);
+		scene.add( hemlight );
+
+		const hemlight1 = new THREE.PointLight(0xffffff, 2.5);
+		hemlight1.position.set(0, 0, 700);
+		scene.add( hemlight1 );
+
+		const hemlight2 = new THREE.PointLight(0xffffff, .5);
+		hemlight2.position.set(0, 30, 0);
+		scene.add( hemlight2 );
+
+		scene.add(pointLight);
+
+		camera.position.set(40, 0, 10);
+
+		scene.background = new THREE.Color(0x339C48);
+
+		var controls = new OrbitControls(camera, renderer.domElement);
+
+		function animate(){
+			requestAnimationFrame(animate);
+
+			pokemon.rotation.y += 0.007;
+
+			controls.update();
+
+			renderer.render(scene, camera);
+
+		}
+		animate();
+	</script>
+</body>
+</html>
